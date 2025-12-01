@@ -1,27 +1,35 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/todo.dart';
-import '../services/storage.dart';
 
 class TodoCubit extends Cubit<List<Todo>> {
-  TodoCubit() : super([]) {
-    load();
-  }
+  TodoCubit() : super([]);
 
-  void load() => emit(Storage.getAll());
+  final List<Todo> _todos = [];
 
-  void add(String title) async {
+  void _refresh() => emit(List.from(_todos));
+
+  void add(String title) {
     if (title.trim().isEmpty) return;
-    await Storage.add(title);
-    load();
+
+    final todo = Todo(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: title.trim(),
+    );
+    _todos.add(todo);
+    _refresh();
   }
 
-  void toggle(String id) async {
-    await Storage.toggle(id);
-    load();
+  void toggle(String id) {
+    final todo = _todos.firstWhere((t) => t.id == id,
+        orElse: () => Todo(id: '', title: ''));
+    if (todo.id.isNotEmpty) {
+      todo.isDone = !todo.isDone;
+      _refresh();
+    }
   }
 
-  void delete(String id) async {
-    await Storage.delete(id);
-    load();
+  void delete(String id) {
+    _todos.removeWhere((t) => t.id == id);
+    _refresh();
   }
 }

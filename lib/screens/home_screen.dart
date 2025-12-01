@@ -1,7 +1,7 @@
-// lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/todo_cubit.dart';
+import '../models/todo.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,9 +14,8 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Task Manager'),
         centerTitle: true,
-        foregroundColor: Colors.white,
       ),
-      body: BlocBuilder<TodoCubit, List<dynamic>>(
+      body: BlocBuilder<TodoCubit, List<Todo>>(
         builder: (context, todos) {
           if (todos.isEmpty) {
             return Center(
@@ -59,7 +58,6 @@ class HomeScreen extends StatelessWidget {
                 child: Card(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   elevation: 5,
-                  color: const Color(0xFF1A1A1A),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   child: ListTile(
@@ -95,14 +93,12 @@ class HomeScreen extends StatelessWidget {
                             todo.isDone ? TextDecoration.lineThrough : null,
                       ),
                     ),
-                    // Added "Swipe to delete" hint
                     trailing: const Text(
                       "Swipe to delete",
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                        fontStyle: FontStyle.italic,
-                      ),
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontStyle: FontStyle.italic),
                     ),
                   ),
                 ),
